@@ -8,3 +8,5 @@ Week 2 - Holiday
 Week 3 - Tree search (depht first). Agent looking for random point in canvas. 
 
 Week 4 - Greedy search. Ball looking for random target in Laberynt using Manhatan Distance as heuristic
+
+Week 5 - Min max algorithm applied to Tic Tac Toe game
