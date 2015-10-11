@@ -3,26 +3,52 @@ import java.util.*;
 PImage bgImg;
 PImage OImg;
 PImage XImg; 
+PImage restartImg;
+PImage restartHoverImg;
 Board b;
 int turn = 0;
 Boolean gameOver = false;
 PVector move = new PVector(0,0);
 ArrayList<String> log = new ArrayList<String>();
+Boolean restartHover = false;
 
+Boolean txtParam1 = false;
+int txtParam2 = -1;
 
 void setup(){
-  size(300,300);
+  size(300,350);
+  init(); 
   bgImg = loadImage("board.png");
+  restartImg = loadImage("restart.png");
+  restartHoverImg = loadImage("restart_hover.png");
   OImg = loadImage("O.png");
   XImg = loadImage("X.png");
+
+}
+
+void init(){
   b = new Board();
   Random rn =new Random();
-  turn = rn.nextInt(2); 
+  turn = rn.nextInt(2);
+  gameOver = false;
+  txtParam1 = false;
+  txtParam2 = turn;
+}
+
+void displayMenu(){
+  if (mouseX < 45 && mouseX > 5 && mouseY < 345 && mouseY > 305){
+    image(restartHoverImg,5,305,40,40);
+  }else{
+    image(restartImg,5,305,40,40);
+  }
 }
 
 void draw(){
   background(bgImg);
+  displayMenu();
+  displayText(txtParam1, txtParam2);
   b.display();
+  
 
 }
 
@@ -37,35 +63,80 @@ int mapToMatrix(float value){
 
 }
 
-void mousePressed(){
-  println("turn " + turn);
-  if (!gameOver){
-    int x = mapToMatrix(mouseX);
-    int y = mapToMatrix(mouseY);
-    
-    if (turn == 0){
-      DrawX();
-      x = (int)move.x;
-      y = (int)move.y;
-      if (b.matrix[x][y] == ' '){
-        b.matrix[x][y] = 'X';
-        turn = 1;
-      }
-      
-    }else{
-      if (b.matrix[x][y] == ' '){
-        b.matrix[x][y] = 'O';
-        turn = 0;
-      }
-    }
-    gameOver = b.getWinner() != ' ';
-    String [] array = new String[log.size()];
-    saveStrings("log.txt",log.toArray(array));
-  }
-  
 
+void mousePressed(){
+  if (mouseY < 300){
+    println("turn " + turn);
+    if (!gameOver){
+      int x = mapToMatrix(mouseX);
+      int y = mapToMatrix(mouseY);
+      
+      if (turn == 0){
+        DrawX();
+        x = (int)move.x;
+        y = (int)move.y;
+        if (b.matrix[x][y] == ' '){
+          b.matrix[x][y] = 'X';
+          turn = 1;
+        }
+        
+      }else{
+        if (b.matrix[x][y] == ' '){
+          b.matrix[x][y] = 'O';
+          turn = 0;
+        }
+      }
+      txtParam1 = false;
+      txtParam2 = turn;
+      
+      char winner = b.getWinner();
+      
+      if (winner != ' ' || !b.movesLeft()){
+        gameOver = true;
+        int t = -1;
+        if (winner == 'X') t =0;
+        if (winner == 'O') t =1;
+        txtParam1 = true;
+        txtParam2 = t;
+        
+      }
+      String [] array = new String[log.size()];
+      saveStrings("log.txt",log.toArray(array));
+    }
+  }else{
+    if (mouseX < 45 && mouseX > 5 && mouseY < 345 && mouseY > 305){
+      init();      
+    }
+  }
 }
 
+
+void displayText(Boolean winner, int player){
+  String mainTxt = "";
+  String secTxt = "";
+  if (!winner){
+    if (player == 0){
+      mainTxt = "Computer's turn";
+      secTxt = "Click any place to see computer's desicion";
+    }else{
+      mainTxt = "Your turn";
+      secTxt = "Choose any cell to put your O symbol";
+    }
+  }else{
+    if (player == 0){
+      mainTxt = "Computer Wins!";
+    }else if (player == 1){
+      mainTxt = "Your Win!";
+    }else{
+      mainTxt = "Draw!";
+    }
+  }
+  fill(255);
+  textSize(16); 
+  text(mainTxt, 150, 320);
+  textSize(12); 
+  text(secTxt, 50, 340);
+}
 
 
 class Board{
@@ -91,6 +162,17 @@ class Board{
   
   }
   
+  Boolean movesLeft(){
+    Boolean result = false;
+     for (int i = 0;i < 3; ++i){
+      for (int j = 0; j < 3; ++j){
+          if (matrix[i][j] == ' '){
+            return true;
+          }
+      }
+    }
+    return result;
+  }
   
   void display(){
     for (int i = 0; i < 3; ++i){
