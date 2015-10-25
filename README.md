@@ -10,3 +10,7 @@ Week 3 - Tree search (depht first). Agent looking for random point in canvas.
 Week 4 - Greedy search. Ball looking for random target in Laberynt using Manhatan Distance as heuristic
 
 Week 5 - Min max algorithm applied to Tic Tac Toe game
+
+Week 6 - No deliverables for this week
+
+Week 7 - Perceptron to allow agent (pacman ghost) learn to avoid obstacles
