@@ -1,3 +1,9 @@
+/*
+* authors:
+*  - José Andrés Mena
+*  - Oscar Rodríguez
+*/
+
 import java.util.*;
 
 PImage bgImg;

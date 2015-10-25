@@ -1,3 +1,11 @@
+/*
+* authors:
+*        - José Andrés Mena
+*        - Natalia Marin
+*        - Randy Salas
+*/
+
+
 ArrayList<PVector> queue;
 ArrayList<String> visited;
 PVector goal;

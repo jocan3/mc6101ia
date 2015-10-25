@@ -1,3 +1,6 @@
+/*
+* author: José Andrés Mena Arias
+*/
 
 Ghost g1;
 

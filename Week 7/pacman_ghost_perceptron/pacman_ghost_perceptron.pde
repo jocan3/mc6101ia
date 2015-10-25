@@ -1,3 +1,9 @@
+/*
+* authors:
+*  - José Andrés Mena
+*  - Oscar Rodríguez
+*/
+
 PImage bg;
 PImage pacman;
 Ghost g1;

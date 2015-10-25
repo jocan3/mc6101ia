@@ -1,3 +1,9 @@
+/*
+* authors:
+*      - José Andrés Mena
+*      - Oscar Rodríguez
+*/
+
 PImage bg;
 int a;
 Ball b;
