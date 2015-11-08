@@ -1,3 +1,8 @@
+/*
+* Class that calculates probabilities: P, P conditional and P Bayes
+* 
+*/
+
 
 class PObject{
 
@@ -51,7 +56,7 @@ class PObject{
   
 
   double PBayes(int X1, String x1, int X2, String x2){
-    return (PConditional(X2,x2,X1,x1)*P(X1,x1))/P(X2,x2);
+    return (double)(PConditional(X2,x2,X1,x1)*P(X1,x1))/P(X2,x2); //<>//
   }
   
 }

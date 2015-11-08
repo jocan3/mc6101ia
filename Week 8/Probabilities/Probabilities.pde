@@ -1,13 +1,9 @@
 /**
-* ControlP5 Textfield
-*
-*
-* find a list of public methods available for the Textfield Controller
-* at the bottom of this sketch.
-*
-* by Andreas Schlegel, 2012
-* www.sojamo.de/libraries/controlp5
-*
+* 
+* Controller that uses ControlP5 to create a sample PObject to calculate probabilitie
+* authors:
+* - José Andrés Mena Arias
+* - Oscar Rodriguez Arroyo
 */
 
 
@@ -32,6 +28,7 @@ void setup() {
   
   cp5 = new ControlP5(this);
   
+  /*
   cp5.addTextfield("rows")
      .setPosition(20,10)
      .setSize(40,40)
@@ -45,7 +42,7 @@ void setup() {
      .setSize(40,40)
      .setFont(font)
     .setColor(color(255,255,255))
-     ;
+     ;*/
        
   cp5.addButton("CreatePObject")
      .setPosition(115,10)
@@ -104,21 +101,28 @@ void setup() {
      ;
      
      
-     cp5.addTextfield("XP")
+    cp5.addTextfield("XPBayes")
     .setCaptionLabel("")
-     .setPosition(220,400)
+     .setPosition(220,500)
      .setSize(40,40)
      .setFont(font)
      .setFocus(true)
      .setColor(color(255,255,255))
      ;
                  
-    cp5.addTextfield("xP")
+    cp5.addTextfield("xPBayes")
     .setCaptionLabel("")
-     .setPosition(265,400)
+     .setPosition(265,500)
      .setSize(40,40)
      .setFont(font)
     .setColor(color(255,255,255))
+     ;
+     
+     
+      cp5.addButton("PBayes")
+     .setPosition(315,500)
+     .setSize(80,40)
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
      ;
      
      
@@ -152,9 +156,7 @@ void CreatePObject(){ //<>//
 
 void CreatePObject(){
   try{
-  String s = cp5.get(Textfield.class,"rows").getText();
-  String o = s;
-  
+   //<>//
   int rows = 8;
   int columns = 3;   
   
@@ -162,7 +164,7 @@ void CreatePObject(){
   
   p.matrix[0][0] = "sum";
   p.matrix[0][1] = "hot";
-  p.matrix[0][2] = "sun";
+  p.matrix[0][2] = "wind";
   p.matrix[1][0] = "sum";
   p.matrix[1][1] = "hot";
   p.matrix[1][2] = "rain";
@@ -171,7 +173,7 @@ void CreatePObject(){
   p.matrix[2][2] = "sun";
   p.matrix[3][0] = "sum";
   p.matrix[3][1] = "cold";
-  p.matrix[3][2] = "rain";
+  p.matrix[3][2] = "wind";
   p.matrix[4][0] = "win";
   p.matrix[4][1] = "hot";
   p.matrix[4][2] = "sun";
@@ -180,7 +182,7 @@ void CreatePObject(){
   p.matrix[5][2] = "rain";
   p.matrix[6][0] = "win";
   p.matrix[6][1] = "cold";
-  p.matrix[6][2] = "sun";
+  p.matrix[6][2] = "wind";
   p.matrix[7][0] = "win";
   p.matrix[7][1] = "cold";
   p.matrix[7][2] = "rain";
@@ -210,21 +212,13 @@ void PConditional(){
   }catch(Exception e){}
 }
 
-void CalculatePConditional(){
+void PBayes(){
   try{
-  fillPObject();
-  int X = Integer.parseInt(cp5.get(Textfield.class,"XP").getText());
-  String x = cp5.get(Textfield.class,"xP").getText();
-  PConditionalValue = p.P(X,x);
-  }catch(Exception e){}
-}
-
-void CalculatePBayes(){
-  try{
-  fillPObject();
-  int X = Integer.parseInt(cp5.get(Textfield.class,"XP").getText());
-  String x = cp5.get(Textfield.class,"xP").getText();
-  PValue = p.P(X,x);
+  fillPObject(); //<>//
+  String [] X = split(cp5.get(Textfield.class,"XPBayes").getText(),',');
+  String [] x = split(cp5.get(Textfield.class,"xPBayes").getText(),',');
+  
+  PBayesValue = p.PBayes(Integer.parseInt(X[0]),x[0],Integer.parseInt(X[1]),x[1]);
   }catch(Exception e){}
 }
 
@@ -244,6 +238,7 @@ void drawPObject(){
     for (int i = 0; i < p.rows; ++i){
       for (int j = 0; j < p.columns; ++j){
           cp5.addTextfield(""+i+""+j)
+          .setCaptionLabel(""+j)
          .setPosition(x,y)
          .setSize(40,20)
          .setFont(font)
@@ -264,6 +259,7 @@ void draw() {
  background(0);
   text(PValue+"", 420,420);
   text(PConditionalValue + "",420,470);
+  text(PBayesValue + "", 420, 520);
  // fill(255);
   //text(cp5.get(Textfield.class,"input").getText(), 360,130);
   //text(textValue, 360,180);
