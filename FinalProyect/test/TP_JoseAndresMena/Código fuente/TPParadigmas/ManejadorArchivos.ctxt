@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=ManejadorArchivos()
+comment1.params=archivo\ st
+comment1.target=void\ escribirEnArchivo(File,\ ArrayList<String>)
+comment2.params=archivo\ texto
+comment2.target=void\ escribirEnArchivo(File,\ String)
+comment3.params=archivo
+comment3.target=ArrayList<String>\ leerDesdeArchivo(File)
+comment3.text=public\ StringTokenizer\ leerDesdeArchivo(File\ archivo){\nStringTokenizer\ st\ \=\ null;\nString\ texto\ \=\ "";\ntry{\nBufferedReader\ fis\ \=\ new\ BufferedReader(new\ FileReader(archivo));\nString\ line\ \=\ fis.readLine();\nwhile\ (line\ \!\=\ null){\ntexto+\=line\ +\ "\\n";\nline\ \=\ fis.readLine();\n}\nfis.close();\nst\ \=\ new\ StringTokenizer(texto,"\\n");\ \ \ \ \ \ \ \ \ \n\n}catch(Exception\ e){\n\n}\ \ \ \ \ \ \ \nreturn\ st;\n}\n
+numComments=4
