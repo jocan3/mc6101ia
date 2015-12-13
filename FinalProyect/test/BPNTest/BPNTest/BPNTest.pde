@@ -1,9 +1,11 @@
-final int DEFAULT_NUM_UNITS_INPUT_LAYER = 10;
+
+final int DEFAULT_NUM_UNITS_INPUT_LAYER = 5000;
 final double DEFAULT_LEARNING_FACTOR = 1.1;
 final int DEFAULT_NUM_HIDDEN_LAYERS = 1;
-final int DEFAULT_NUM_UNITS_HIDDEN_LAYERS = 5;
-final int DEFAULT_UNITS_OUTPUT_LAYER = 10;
+final int DEFAULT_NUM_UNITS_HIDDEN_LAYERS = 2500;
+final int DEFAULT_UNITS_OUTPUT_LAYER = 1;
 final double DEFAULT_TOLERANCE = 0.1;
+
 BPN brain;
 BPNManager brainManager;
 
@@ -17,27 +19,25 @@ void setup(){
 
 void draw(){
   
-      byte[] meh =getRandomInputs(DEFAULT_NUM_UNITS_INPUT_LAYER);
-      byte[] result = brainManager.getMovesPattern(meh);     
+      short[] meh =getRandomInputsShort(DEFAULT_NUM_UNITS_INPUT_LAYER);
+      double result = brainManager.getWaitTime(meh);     
       
        
-      String str = "";
-      for (int i = 0; i < meh.length; ++i){
-        str += (char)meh[i];
-      }
-      System.out.println(str);
-    
+      String str = "Result: " + result;
       
-      str = "";
-      for (int i = 0; i < result.length; ++i){
-        str += (char)result[i];
-      }
       System.out.println(str);
     
 }
 
 
 
+short[] getRandomInputsShort(int numInputs){
+  short[] result = new short[numInputs];
+  for (int i = 0; i < numInputs; ++i){
+    result[i] = (short)random(16000);
+  }
+  return result;
+}
 
 byte[] getRandomInputs(int numInputs){
   byte[] result = new byte[numInputs];

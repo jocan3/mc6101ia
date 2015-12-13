@@ -48,8 +48,6 @@ final int DEFAULT_NUM_HIDDEN_LAYERS = 1;
 final int DEFAULT_NUM_UNITS_HIDDEN_LAYERS = 5;
 final int DEFAULT_UNITS_OUTPUT_LAYER = 10;
 final double DEFAULT_TOLERANCE = 0.1f;
-    
-
 
 ControlP5 cp5;
 
@@ -60,7 +58,9 @@ KetaiBluetooth bt;
 
 BPN brain;
 BPNManager brainManager;
+
 boolean useBrain = false;
+boolean dance = false;
 
 boolean isConfiguring = true;
 boolean connected = false;
@@ -70,6 +70,14 @@ KetaiList klist;
 ArrayList devicesDiscovered = new ArrayList();
 char valueToSend = 'u';
 
+byte [] moves = {'u','d','l','r'};
+int  slowIndex = 0;
+int  mediumIndex = 0;
+int fastIndex = 0;
+
+
+int wait = 0;
+int time = 0;
 
 //********************************************************************
 // The following code is required to enable bluetooth at startup.
@@ -140,18 +148,39 @@ public void initUI(){
      .setSize(wSize,hSize)
      .activateBy(ControlP5.PRESSED)
      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(34);
-     ;    
+     ;     
      
-       cp5.addButton("START_STOP")
-     .setPosition(1*wSize,(0*hSize))
+      wSize = (int)(vScreenWidth/12);
+      hSize = (int)(vScreenHeight/8);
+     
+     cp5.addButton("START_STOP")
+     .setPosition(1*wSize,(3*hSize))
      .setSize(wSize,hSize)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(34);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(17);
      ;
      
-      cp5.addButton("NEURAL_NETWORK")
-     .setPosition(1*wSize,2*hSize)
+     cp5.addButton("NEURAL_NETWORK")
+     .setPosition(3*wSize,3*hSize)
      .setSize(wSize,hSize)
-     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(34);
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(17);
+     ;  
+
+     cp5.addButton("SLOW")
+     .setPosition(0*wSize,5*hSize)
+     .setSize(wSize,hSize)
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(17);
+     ;
+     
+     cp5.addButton("MEDIUM")
+     .setPosition(2*wSize,5*hSize)
+     .setSize(wSize,hSize)
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(17);
+     ;
+     
+     cp5.addButton("FAST")
+     .setPosition(4*wSize,5*hSize)
+     .setSize(wSize,hSize)
+     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER).setSize(17);
      ;    
 
 }
@@ -212,11 +241,44 @@ public void NEURAL_NETWORK(){
      useBrain = false;
    }
    else{
-    useBrain = true;     
-     
+    useBrain = true;  
+    dance = false;  
    }
-
 }
+
+public void activateDance(int w){
+     if (dance){
+     dance = false;
+   }
+   else{
+    useBrain = false;  
+    dance= true;
+    time = millis();
+    wait = w;
+   }
+}
+
+public void FAST(){
+ if (isConfiguring)
+     return;
+  activateDance(100);
+  
+}
+
+public void SLOW(){
+ if (isConfiguring)
+     return;
+  activateDance(1000);
+}
+
+public void MEDIUM(){
+   if (isConfiguring)
+     return;
+  activateDance(500);
+  
+}
+
+
 
 
 public void draw() {
@@ -239,15 +301,19 @@ public void draw() {
      info = "Using neural network";
       byte[] result = brainManager.getMovesPattern(getRandomInputs(DEFAULT_NUM_UNITS_INPUT_LAYER));     
       bt.broadcast(result);
-   }else{
-     if (mousePressed){
+   }else if (dance){ 
+     if (millis() - time > wait){
+       byte[] result = {getRandomElement(moves)};   
+       time = millis();
+       bt.broadcast(result);  
+     }
+   }if (mousePressed){
        byte[] data = {(byte)valueToSend};
        bt.broadcast(data);
      }else{
        info = "";
      }
    }
- }
 }
 
 
@@ -257,6 +323,10 @@ public byte[] getRandomInputs(int numInputs){
     result[i] = (byte)(((int)random(2) == 1) ? '1' : '0');
   }
   return result;
+}
+
+public byte getRandomElement(byte[] list){
+  return list[(int)random(list.length)];
 }
 
 public void onKetaiListSelection(KetaiList klist) {
@@ -532,8 +602,6 @@ public class BPNManager
 
 }   
     
-
-
 
 
 
@@ -864,7 +932,6 @@ public class BPN
         
         }
 }
-
   public void settings() {  size(displayWidth, displayHeight); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Control" };

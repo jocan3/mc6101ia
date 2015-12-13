@@ -64,6 +64,16 @@ public class BPNManager
         this.redNeuronal = rn;
     }
     
+    public double getWaitTime(short [] input){      
+        double [] inputVector = new double[redNeuronal.getCantidadUnidadesEntrada()];
+        for (int i = 0; i < inputVector.length; ++i){
+          inputVector[i] = (i < input.length) ? input[i] : 0;
+        }
+        redNeuronal.setEntradas(inputVector);
+        redNeuronal.propagarHaciaAdelante();
+        double [] output = redNeuronal.getSalidas();
+        return output[0];
+    }
     
     public byte[] getMovesPattern (byte[] input){
         double [] inputVector = new double[input.length];

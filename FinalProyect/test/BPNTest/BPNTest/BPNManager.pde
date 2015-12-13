@@ -64,6 +64,16 @@ public class BPNManager
         this.redNeuronal = rn;
     }
     
+    public double getWaitTime(short [] input){      
+        double [] inputVector = new double[redNeuronal.getCantidadUnidadesEntrada()];
+        for (int i = 0; i < inputVector.length; ++i){
+          inputVector[i] = (i < input.length) ? input[i] : 0;
+        }
+        redNeuronal.setEntradas(inputVector);
+        redNeuronal.propagarHaciaAdelante();
+        double [] output = redNeuronal.getSalidas();
+        return output[0];
+    }
     
     public byte[] getMovesPattern (byte[] input){
         double [] inputVector = new double[input.length];
@@ -74,13 +84,7 @@ public class BPNManager
         redNeuronal.setEntradas(inputVector);
         redNeuronal.propagarHaciaAdelante();
         double [] salidas = redNeuronal.getSalidas();
-       String str = "";
-      
-      for (int i = 0; i < salidas.length; ++i){
-        str += salidas[i] +"-";
-      }
-      System.out.println(str);
-
+        
         double limiteInferior = 0.9-redNeuronal.getTolerancia();
         double limiteSuperior = 0.9+redNeuronal.getTolerancia();
         
@@ -89,7 +93,7 @@ public class BPNManager
         byte [] values = {'u','d'};
         
         for (int i = 0; i < redNeuronal.getCantidadUnidadesSalida(); ++i){
-            if (salidas[i] > 0.5){
+          if (salidas[i] > 0.5){
                  output[i] = values[i%2];
             }else{
               output[i] = 'x';
@@ -231,10 +235,6 @@ public class BPNManager
         redNeuronal.setEntradas(vectorEntrada);
         redNeuronal.propagarHaciaAdelante();
         double [] salidas = redNeuronal.getSalidas();
-        
-        
-        System.out.primtln(salidas.toString());
-        
         
         double limiteInferior = 0.9-redNeuronal.getTolerancia();
         double limiteSuperior = 0.9+redNeuronal.getTolerancia();
