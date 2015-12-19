@@ -1,2 +1,2 @@
-C:\Users\amenaari\AppData\Local\Temp\android55024996429279779sketch\bin\AndroidManifest.xml : \
-C:\Users\amenaari\AppData\Local\Temp\android55024996429279779sketch\AndroidManifest.xml \
+C:\Users\amenaari\AppData\Local\Temp\android846733187981413535sketch\bin\AndroidManifest.xml : \
+C:\Users\amenaari\AppData\Local\Temp\android846733187981413535sketch\AndroidManifest.xml \

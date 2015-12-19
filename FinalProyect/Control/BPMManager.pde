@@ -75,6 +75,83 @@ public class BPNManager
         return output[0];
     }
     
+    
+    public boolean tapDetected(Complex [] input){
+        double [] inputVector = new double[redNeuronal.getCantidadUnidadesEntrada()];
+        for (int i = 0; i < inputVector.length; ++i){
+          inputVector[i] = input[i].re;
+        }
+        redNeuronal.setEntradas(inputVector);
+        redNeuronal.propagarHaciaAdelante();
+        double [] output = redNeuronal.getSalidas();
+        
+        double lowerBound = 0.9-redNeuronal.getTolerancia();
+        double upperBound = 0.9+redNeuronal.getTolerancia();
+        
+        return (output[0] > lowerBound && output[0] < upperBound);
+    }
+    
+    
+    public double move(double [] input){
+        redNeuronal.setEntradas(input);
+        redNeuronal.propagarHaciaAdelante();
+        double [] output = redNeuronal.getSalidas();
+        
+        return output[0];
+        /*
+        double lowerBound = 0.9-redNeuronal.getTolerancia();
+        double upperBound = 0.9+redNeuronal.getTolerancia();
+        return (output[0] > lowerBound && output[0] < upperBound);
+        */
+    }
+    
+    public void train(double [] input, boolean result){
+                redNeuronal.setEntradas(input);
+                double r = result? 0.9 : 0.1;
+                double [] output = {r};
+                redNeuronal.setSalidasEsperadas(output);
+                redNeuronal.propagarHaciaAdelante();
+                redNeuronal.computarErrorSalida();
+                if (redNeuronal.getError()){
+                    redNeuronal.propagarHaciaAtras();
+                    redNeuronal.ajustarPesos();
+                }
+    }
+    
+    public boolean highIntensityDetected(short [] input){
+        double [] inputVector = new double[redNeuronal.getCantidadUnidadesEntrada()];
+        for (int i = 0; i < inputVector.length; ++i){
+          inputVector[i] = input[i];
+        }
+        redNeuronal.setEntradas(inputVector);
+        redNeuronal.propagarHaciaAdelante();
+        double [] output = redNeuronal.getSalidas();
+        
+        double lowerBound = 0.9-redNeuronal.getTolerancia();
+        double upperBound = 0.9+redNeuronal.getTolerancia();
+        
+        return (output[0] > lowerBound && output[0] < upperBound);
+    }
+    
+    
+    public void teachTap(Complex [] input, boolean expected){
+                double output = expected? 0.9:0.1;
+                double [] outputs = {output};
+                double [] inputVector = new double[redNeuronal.getCantidadUnidadesEntrada()];
+                for (int i = 0; i < inputVector.length; ++i){
+                  inputVector[i] = input[i].re;
+                }
+                redNeuronal.setEntradas(inputVector);                
+                redNeuronal.setSalidasEsperadas(outputs);
+                redNeuronal.propagarHaciaAdelante();
+                redNeuronal.computarErrorSalida();
+                if (redNeuronal.getError()){
+                    redNeuronal.propagarHaciaAtras();
+                    redNeuronal.ajustarPesos();
+                }
+    }
+    
+    
     public byte[] getMovesPattern (byte[] input){
         double [] inputVector = new double[input.length];
         for (int i = 0; i < input.length; ++i){
